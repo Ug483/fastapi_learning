@@ -1,0 +1,23 @@
+#day 1 
+from fastapi import FastAPI
+
+app = FastAPI()
+
+
+
+@app.get("/about")
+def about():
+    return {"name": "FastAPI App"}
+
+@app.get("/")
+def welcome():
+    return {"message": "WELCOME "}
+
+@app.get("/hello")
+def hello():
+    return {"message": "hello umang"}
+
+from fastapi import FastAPI
+
+app = FastAPI()
+
