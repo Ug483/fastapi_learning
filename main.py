@@ -1,39 +1,26 @@
-#day 6 crud basics in memory data
+#day 2 routes and http method
 from fastapi import FastAPI
-from pydantic import BaseModel
-from typing import List
 
 app = FastAPI()
+#get method
+@app.get("/hello")
+def hello():
+    return {"message": "Hello from GET"}
 
-# -----------------------------
-# Pydantic Models
-# -----------------------------
 
-# Input model (client sends this)
-class UserIn(BaseModel):
-    username: str
-    password: str
+@app.get("/profile")
+def profile():
+    return {
+        "name": "Umang",
+        "role": "FastAPI Learner"
+    }
+#post method
+@app.post("/login")
+def login():
+    return {"status": "Login successful"}
 
-# Output model (client receives this)
-class UserOut(BaseModel):
-    username: str
-
-# -----------------------------
-# In-Memory Storage (RAM)
-# -----------------------------
-users = []  # temporary storage
-
-# -----------------------------
-# CREATE USER (POST)
-# -----------------------------
-@app.post("/users", response_model=UserOut)
-def create_user(user: UserIn):
-    users.append(user)   # store in memory
-    return user          # password auto-hidden
-
-# -----------------------------
-# READ USERS (GET)
-# -----------------------------
-@app.get("/users", response_model=List[UserOut])
-def get_users():
-    return users
+@app.get("/about")
+def about():
+    return {
+        "name": "Umang",
+        "course": "B.tech"}
