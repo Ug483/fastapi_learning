@@ -1,0 +1,58 @@
+#DAY 3 PATH  PARAMETERS AND QUERY PARAMETERS
+
+from fastapi import FastAPI
+
+app = FastAPI()
+#path parameter
+@app.get("/users/{user_id}")
+def get_user(user_id: int):
+    return {
+        "user_id": user_id,
+        "message": "User fetched successfully"
+    }
+
+#query parameter
+@app.get("/search")
+def search(name: str, age: int):
+    return {
+        "name": name,
+        "age": age
+    }
+#optional parameter
+from typing import Optional
+
+@app.get("/items")
+def get_items(q: Optional[str] = None):
+    return {"query": q}
+
+#path + query parameter
+@app.get("/users/{user_id}/details")
+def user_details(user_id: int, active: bool):
+    return {
+        "user_id": user_id,
+        "active": active
+    }
+
+#task 
+
+@app.get("/students/{stu_id}")
+def get_student(stu_id: int):
+    return {
+        "student_id": stu_id,
+        "message": "Student ID received successfully"
+    }
+    
+    
+@app.get("/filter")
+def filter(course: str, year: int):
+    return {
+        "course": course,
+        "year": year
+    }
+    
+@app.get("/products/{p_id}/details")
+def product_details(p_id: int, discount: bool):
+    return {
+        "p_id": p_id,
+        "discount": discount
+    }    
