@@ -1,0 +1,43 @@
+#day 4 
+#use pydantic model use full login api
+from fastapi import FastAPI
+from pydantic import BaseModel
+
+app = FastAPI()
+
+class Login(BaseModel):
+    username: str
+    password: str
+
+@app.post("/login")
+def login(data: Login):
+    return {
+        "message": "Login successful",
+        "username": data.username
+    }
+    
+#register api
+class Register(BaseModel):
+    name: str
+    email: str
+    age: int
+
+@app.post("/register")
+def register(user: Register):
+    return {
+        "name": user.name,
+        "email": user.email
+    }
+
+#signup api
+class Signup(BaseModel):
+    name: str
+    email: str
+    age: int
+
+@app.post("/signup")
+def signup(user: Signup):
+    return {
+        "name": user.name,
+        "email": user.email
+    }
