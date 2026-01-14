@@ -1,0 +1,83 @@
+#day 8 update and delete api (put&delete)
+
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from typing import List
+
+app = FastAPI(title="FastAPI Day 8 - Full CRUD")
+
+# -----------------------------
+# Models
+# -----------------------------
+class UserIn(BaseModel):
+    username: str
+    password: str
+
+class UserOut(BaseModel):
+    username: str
+
+# -----------------------------
+# In-memory storage
+# -----------------------------
+users = []
+
+# -----------------------------
+# CREATE USER
+# -----------------------------
+@app.post("/users", response_model=UserOut)
+def create_user(user: UserIn):
+    for u in users:
+        if u.username == user.username:
+            raise HTTPException(
+                status_code=400,
+                detail="User already exists"
+            )
+    users.append(user)
+    return user
+
+# -----------------------------
+# READ ALL USERS
+# -----------------------------
+@app.get("/users", response_model=List[UserOut])
+def get_users():
+    return users
+
+# -----------------------------
+# READ SINGLE USER
+# -----------------------------
+@app.get("/users/{username}", response_model=UserOut)
+def get_user(username: str):
+    for user in users:
+        if user.username == username:
+            return user
+    raise HTTPException(status_code=404, detail="User not found")
+
+# -----------------------------
+# UPDATE USER
+# -----------------------------
+@app.put("/users/{username}", response_model=UserOut)
+def update_user(username: str, updated_user: UserIn):
+    for index, user in enumerate(users):
+        if user.username == username:
+            users[index] = updated_user
+            return updated_user
+
+    raise HTTPException(
+        status_code=404,
+        detail="User not found"
+    )
+
+# -----------------------------
+# DELETE USER
+# -----------------------------
+@app.delete("/users/{username}")
+def delete_user(username: str):
+    for index, user in enumerate(users):
+        if user.username == username:
+            users.pop(index)
+            return {"message": "User deleted successfully"}
+
+    raise HTTPException(
+        status_code=404,
+        detail="User not found"
+    )
