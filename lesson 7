@@ -1,0 +1,59 @@
+# DAY 7 ERROR HANDLING IN FASTAPI
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from typing import List
+
+app = FastAPI(title="FastAPI Day 7 - Error Handling")
+
+# -----------------------------
+# Pydantic Models
+# -----------------------------
+class UserIn(BaseModel):
+    username: str
+    password: str
+
+class UserOut(BaseModel):
+    username: str
+
+# -----------------------------
+# In-Memory Storage (RAM)
+# -----------------------------
+users = []
+
+# -----------------------------
+# CREATE USER
+# -----------------------------
+@app.post("/users", response_model=UserOut)
+def create_user(user: UserIn):
+    # Check if user already exists
+    for u in users:
+        if u.username == user.username:
+            raise HTTPException(
+                status_code=400,
+                detail="User already exists"
+            )
+
+    users.append(user)
+    return user
+
+# -----------------------------
+# GET ALL USERS
+# -----------------------------
+@app.get("/users", response_model=List[UserOut])
+def get_users():
+    return users
+
+# -----------------------------
+# GET USER BY USERNAME
+# -----------------------------
+@app.get("/users/{username}", response_model=UserOut)
+def get_user(username: str):
+    for user in users:
+        if user.username == username:
+            return user
+
+    # User not found
+    raise HTTPException(
+        status_code=404,
+        detail="User not found"
+    )
